@@ -15,7 +15,7 @@ dependencies = [
   "sqlgym",
   "pandas",
   "tenacity",
-  "langchain==0.3.27",
+  "langchain==1.3.9",
   "langchain-openai",
   "python-dotenv",
   "langchain_huggingface",
