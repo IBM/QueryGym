@@ -1,0 +1,28 @@
+Translate the input natural language **User Query** to a valid SQLite query that can be executed on the mentioned database.
+
+
+Do your best to apply the following rules when generating SQL.
+- Cleary understand the **User Query**, Schema, and sample table values.
+- Only SELECT statements are allowed, do not produce any DDL or DML.
+- When writing `SELECT <column>`, only include the columns specifically mentioned in the question.
+- Use **evidence** to find correct column names or the values of the columns or other expressions.
+- Use `WHERE <column> IS NOT NULL` in `WHERE` if you are sorting with `<column>`.
+- Use alias in `SELECT` is consistently in the expressions.
+- Use `WHERE <alias> IS NOT NULL` in `WHERE` if you are sorting with `<alias>`.
+
+Note: Always return your SQL as follows:
+```sql
+...
+```
+
+
+# User Query 
+
+{query}
+
+
+{schema}
+
+# Preview Tables
+
+{tables}

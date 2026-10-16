@@ -1,0 +1,167 @@
+actions:
+  GET_OVERVIEW:
+    description: Get an overview of the task.
+    usage: >
+        Action: ["get_overview"]
+        
+  GET_QUERY:
+    description: Get the user query.
+    usage: >
+        Action: ["get_query"]
+
+  GET_TABLES:
+    description: Get a list of tables in the database.
+    usage: >
+        Action: ["get_tables"]
+  
+  GET_SCHEMA:
+    description: Get the schema.
+    usage: >
+        Action: ["get_schema"]
+
+  GET_COLUMNS:
+    description: Get a list of columns in a given table.
+    usage: >
+        Action: ["get_columns", "<table_id>"]
+    examples_description: >
+      Example #1: ["get_columns", "T_0"]
+      Example #2: ["get_columns", "frpm"]
+
+  GET_ACTIONS:
+    description: Get a list of actions.
+    usage: >
+        Action: ["get_actions"]
+
+  GET_OPERATIONS:
+    description: Get a list of operations.
+    usage: >
+        Action: ["get_operations"]
+
+  PREVIEW_TABLE:
+    description: Preview the first 5 rows of a table.
+    usage: >
+        Action: ["preview_table", "<table_id>"]
+    examples_description: >
+      Example #1: ["preview_table", "`employee name` as emp"]
+      Example #2: ["preview_table", "crime"]
+
+  GET_COLUMN_STATS:
+    description: Get descriptive statistics of a column, it include the central tendency, dispersion and shape of a dataset’s distribution, excluding NaN values.
+    usage: >
+        Action: ["get_column_stats", "<table_id>", "<column_id>"]
+    examples_description: >
+      Example #1: ["get_column_stats", "`employee name` as emp",  "emp.address"]
+      Example #2: ["get_column_stats", "crime", "crime.case_number"]
+
+  GET_UNIQUE_VALUES:
+    description: Get unique values from a specified column in a table.
+    usage: >
+        Action: ["get_unique_values", "<table_id>", "<column_id>"]
+    examples_description: >
+      Example #1: ["get_unique_values", "`employee name` as emp",  "emp.address"]
+      Example #2: ["get_unique_values", "crime", "crime.case_number"]
+
+  GET_COLUMN_TYPES: 
+    description: Preview the data types of all columns in a table.
+    usage: >
+        Action: ["get_column_types", "<table_id>"]
+    examples_description: >
+      Example #1: ["get_column_types", "`employee name` as emp"]
+      Example #2: ["get_column_types", "crime"]
+
+  GET_SAMPLE_VALUES: 
+    description: Get sample values from a specific column. 
+    usage: >
+        Action: ["get_sample_values", "<table_id>", "<column_id>"]
+    examples_description: >
+      Example #1: ["get_sample_values", "employee", "employee.phone_number"]
+      Example #2: ["get_sample_values", "Solution as T_1", "T_1.SolutionID"]
+
+  PERFORM_PROJECTION:
+    description: Project columns from a table. 
+    usage: >
+        Action: ["perform_projection", "<table_id>", "<columns>"]
+    examples_description: >
+      Example #1: ["perform_projection", "T_0", "DISTINCT T_0.movie_title, T_0.movie_popularity"]
+      Example #2: ["perform_projection", 'T_3', "AVG(T_3.rating_score) as score"]
+      Example #3: ["perform_projection", "employee", "employee.`home address`"]
+      
+  PERFORM_FILTER:
+    description: Filter rows from a table based on some condition. 
+    usage: >
+        Action: ["perform_filter", "<table_id>", "<conditions>", "[projected columns]"]
+    examples_description: >
+        Example #1: ["perform_filter", "T_1", "T_1.list_creation_date_utc >= 2016-02-01 AND T_1.list_creation_date_utc <= 2016-02-29 AND T_1.user_eligible_for_trial = 1"]
+        Example #2: ["perform_filter", "T_2", "T_2.movie_release_year = 2021 AND T_2.director_name = 'Steven Spielberg'"]
+
+  PERFORM_JOIN:
+    description: >
+      This action joins two tables based on a condition. When executing this action, remember to follow the exact format provided in usage.
+    usage: >
+      Action: ["perform_join", "<list-of-tables>", "<list-of-join-conditions>", "<list-of-join-type>", "<projected columns>"]
+    examples_description: >
+      If you have N tables, you should have a list of N - 1 join conditions.
+      Example #1: ["perform_join", ["Table_0", "Table_1","Table_2"], ["Table_0.column = Table_1.column AND Table_1.`planet name` == 'earth'”, "Table_1.`planet name` = Table_2.`planet name` and Table_2.solar_system = `Milky Way`"], ["INNER JOIN", "LEFT JOIN"], '(Table_1.`planet name` || " " || Table_2.solar_system) AS planet_location']
+      Example #2: ["perform_join", ["job as T2", "job_details as T1"], ["T1.info = T2.info"], ["INNER JOIN"], "T2.OfficeCoordinates"]
+
+
+  PERFORM_ORDER_BY:
+    description: Order table entities based on a condition.
+    usage: >
+        Action: ["perform_order_by", "<table-id>", "<order-condition>", "[projected columns]"]
+    examples_description: >
+        Example #1: ["perform_order_by", "T_0", "(CAST(`Free Meal Count (K-12)` AS REAL) / `Enrollment (K-12)`) DESC"] 
+        Example #2: ["perform_order_by", "movies", "movie_popularity DESC NULLS LAST"]
+
+  PERFORM_LIMIT:
+    description: Limit the table rows based on a condition.
+    usage: >
+        Action: ["perform_limit", "<table-id>", "<integer>", "[projected columns]"]
+    examples_description: >
+        Example #1: ["perform_limit", "`employee name` as emp", "5"]
+        Example #2: ["perform_limit", "T_0", "3"]
+
+
+  PERFORM_AGGREGATE:
+    description: Used when results are to be aggregated or grouped by some column.
+    usage: >
+        Action: ["perform_aggregate", "<table-id>", "<column-id>", "<projected columns>", "[having-condition]"]
+    examples_description: >
+        Example #1: ["perform_aggregate", "movies", "director_name,  director_country", "director_name,  director_country", "COUNT(movies) > 3"]
+        Example #2: ["perform_aggregate", "employee", "employee_id", "employee_id", "MAX(SUBSTR(list_creation_date_utc, 1, 4)) - MIN(SUBSTR(list_creation_date_utc, 1, 4)) >= 10"]
+
+  
+  PERFORM_UNION:
+    description: Used to union two tables.
+    usage: >
+        Action: ["perform_union", "ALL|DISTINCT",  "<table-1-id>", "<table-2-id>", "[table-1-columns]", "[table-2-columns]"]
+    examples_description: >
+        Example #1: ["perform_union", "ALL",  "movies", "ratings", "movie.rating, movie.name", "ratings.movie_score, ratings.movie_title"]
+        Example #2: ["perform_union", "DISTINCT",  "T_0", "T_2", "T_0.name", "T_2.reviews"]
+
+  PERFORM_INTERSECT:
+    description: Used to intersect two tables.
+    usage: >
+        Action: ["perform_intersect", "<table-1-id>", "<table-2-id>", "[table-1-columns]", "[table-2-columns]"]
+    examples_description: >
+        Example #1: ["perform_intersect", "movies", "ratings", "movie.rating, movie.name", "ratings.movie_score, ratings.movie_title"]
+        Example #2: ["perform_intersect", "T_0", "T_2", "T_0.name", "T_2.reviews"]
+
+
+system_instruction: >
+ Given a source schema and a target schema, your goal is to generate a sequence of data manipulation operations compatible with postgresql that would transform the source to the target schema."
+
+  The following actions and operations are available for use:
+
+  #### Actions
+  {{get_actions}}
+  
+  Only return the next best action. Start the action with "Action:." Enclose the column names in `backtick` if it has space. 
+
+  You can be creative with the queries you return. Where applicable, try incorporating different types of actions (PERFORM_PROJECTION, PERFORM_FILTER, PERFORM_ORDER_BY, etc.), functions (COUNT(), AVG(), etc.), and/or modifiers (DESC, ASC,etc.). To summarize, filter and analyze data better, pay attention to when aggregate operations can be combined with different functions.
+
+  Solve each question in the most accurate, efficient way possible favoring clear logic and minimal redundancy.  If multiple valid ways to solve a question exist, choose the shortest solution. 
+
+  Required: If you get into a loop - executing the same action continuously - break out of it by selecting a different action.  
+
+  Do nothing else but return only the first action.
